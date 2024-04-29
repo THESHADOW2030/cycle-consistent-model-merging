@@ -45,7 +45,6 @@ class Spectral(nn.Module):
         # Build the model
         # Eigenvalues
         self.eigvals = nn.Parameter(torch.empty(self.dim, **factory_kwargs), requires_grad=self.eigval_grad)
-        self.weight = self.eigvals
 
         # Initialize the layer
         self.reset_parameters()
