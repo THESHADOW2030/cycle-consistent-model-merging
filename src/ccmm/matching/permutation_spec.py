@@ -224,3 +224,24 @@ class VGG16PermutationSpecBuilder(PermutationSpecBuilder):
         }
 
         return self.permutation_spec_from_axes_to_perm(axes_to_perm)
+
+
+class SpectralPermutationSpecBuilder(PermutationSpecBuilder):
+    def __init__(self, num_hidden_layers: int):
+        self.num_hidden_layers = num_hidden_layers
+
+    def create_permutation_spec(self) -> PermutationSpec:
+        L = self.num_hidden_layers
+        assert L >= 1
+
+        axes_to_perm = {
+            "layer0.0.weight": ("P_0", None),
+            **{f"layer{i}.0.weight": (f"P_{i}", f"P_{i-1}") for i in range(1, L)},
+            **{f"layer{i}.0.bias": (f"P_{i}",) for i in range(L)},
+            **{f"layer{i}.1.eigvals": (f"P_{i}",) for i in range(L)},
+            f"layer{L}.0.weight": (None, f"P_{L-1}"),
+            f"layer{L}.0.bias": (None,),
+            f"layer{L}.1.eigvals": (None,),
+        }
+
+        return self.permutation_spec_from_axes_to_perm(axes_to_perm)
