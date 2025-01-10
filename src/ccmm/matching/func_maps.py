@@ -400,7 +400,7 @@ def fit_func_map(
     ev_sq_diff = ev_sq_diff / ev_sq_diff.sum()  # Scaling
 
     # Initialization
-    C_init = init_func_map(k1, k2, mode=InitFM_mode)
+    C_init = init_func_map(k1, k2, mode=InitFM_mode).ravel()
 
     res = minimize(
         fun=loss_fn,
